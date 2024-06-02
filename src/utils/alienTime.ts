@@ -160,31 +160,6 @@ export const calculateAlienTimeAll = (
   let finalMinute = tempMinute.minute;
   let finalSecond = tempMinute.second;
 
-  if (finalSecond >= ALIEN_TIME.minute) {
-    finalSecond = 0;
-    finalMinute = finalMinute + 1;
-  }
-
-  if (finalMinute >= ALIEN_TIME.hour) {
-    finalMinute = 0;
-    finalHour = finalHour + 1;
-  }
-
-  if (finalHour >= ALIEN_TIME.day) {
-    finalHour = 0;
-    finalDay = finalDay + 1;
-  }
-
-  if (finalDay >= monthArray[finalMonth - 1]) {
-    finalDay = 0 + 1;
-    finalMonth = finalMonth + 1;
-  }
-
-  if (finalMonth > monthArray.length) {
-    finalMonth = 0 + 1;
-    finalYear = finalYear + 1;
-  }
-
   return {
     year: finalYear + DEFAULT_ALIEN_TIMESTAMP_TIME.year,
     month: finalMonth,
