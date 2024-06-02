@@ -14,7 +14,7 @@ export const totalAlienDaysPerYear = (monthArray: number[]) => {
   return totalDayPerYear;
 };
 
-const addRemainingDays = () => {
+export const addRemainingDays = () => {
   let day =
     ALIEN_TIME.month[DEFAULT_ALIEN_TIMESTAMP_TIME.month - 1] -
     DEFAULT_ALIEN_TIMESTAMP_TIME.day;
@@ -31,15 +31,33 @@ const addRemainingDays = () => {
   return result;
 };
 
-export const calculateYear = (totalDays: number, timestamp: number) => {
-  let tempYear = addRemainingDays();
-  let year = Math.floor(
-    (timestamp - tempYear) / totalDays / ALIEN_TIME_IN_TIMESTAMP.day
+export const alignTimestamp = (timestamp: number) => {
+  return timestamp - addRemainingDays();
+};
+
+export const calculateYear = (
+  totalDays: number,
+  timestamp: number,
+  year: number,
+  type: string
+) => {
+  let finalYear = Math.floor(
+    timestamp / totalDays / ALIEN_TIME_IN_TIMESTAMP.day
   );
 
+  if (type === "year") {
+    return {
+      year: year,
+      currentYearTimestamp:
+        (year - (DEFAULT_ALIEN_TIMESTAMP_TIME.year + 1)) *
+        totalDays *
+        ALIEN_TIME_IN_TIMESTAMP.day,
+    };
+  }
+
   return {
-    year: year,
-    currentYearTimestamp: year * totalDays * ALIEN_TIME_IN_TIMESTAMP.day,
+    year: finalYear + 1,
+    currentYearTimestamp: finalYear * totalDays * ALIEN_TIME_IN_TIMESTAMP.day,
   };
 };
 
@@ -55,19 +73,16 @@ export const calculateMonth = (
   let lastMonthTimestampCounter = 0;
   let differenceTimestamp = tempCurrentTimestamp - currentYearTimestamp;
 
-  while (differenceTimestamp > tempTotalDays) {
-    tempMonth = tempMonth + 1;
+  while (differenceTimestamp >= tempTotalDays) {
     lastMonthTimestampCounter = tempTotalDays;
     tempTotalDays =
       tempTotalDays + tempMonthArray[tempMonth] * ALIEN_TIME_IN_TIMESTAMP.day;
+    tempMonth = tempMonth + 1;
   }
 
   return {
     month: tempMonth,
-    currentMonthTimestamp:
-      lastMonthTimestampCounter +
-      currentYearTimestamp +
-      ALIEN_TIME_IN_TIMESTAMP.day,
+    currentMonthTimestamp: lastMonthTimestampCounter + currentYearTimestamp,
   };
 };
 
@@ -77,14 +92,15 @@ export const calculateDay = (
 ) => {
   let tempCurrentTimestamp = currentTimestamp;
   let tempCurrentDayTimestamp = currentDayTimestamp;
+  let differenceTimestamp = tempCurrentTimestamp - tempCurrentDayTimestamp;
   let tempDay = 0;
   let dayTimestampCounter = 0;
   let lastDayTimestampCounter = 0;
 
-  while (dayTimestampCounter + tempCurrentDayTimestamp < tempCurrentTimestamp) {
-    tempDay = tempDay + 1;
+  while (dayTimestampCounter <= differenceTimestamp) {
     lastDayTimestampCounter = dayTimestampCounter;
     dayTimestampCounter = dayTimestampCounter + ALIEN_TIME_IN_TIMESTAMP.day;
+    tempDay = tempDay + 1;
   }
 
   return {
@@ -127,22 +143,89 @@ export const calculateAlienTimeAll = (
   monthArray: number[],
   timestamp: number
 ) => {
-  const year = calculateYear(totalDays, timestamp);
-  const month = calculateMonth(
-    year.currentYearTimestamp,
+  const tempYear = calculateYear(totalDays, timestamp, 0, "");
+  const tempMonth = calculateMonth(
+    tempYear.currentYearTimestamp,
     monthArray,
     timestamp
   );
-  const day = calculateDay(month.currentMonthTimestamp, timestamp);
-  const hour = calculateHour(day.currentDayTimestamp, timestamp);
-  const minute = calculateMinute(hour.currentHourTimestamp, timestamp);
+  const tempDay = calculateDay(tempMonth.currentMonthTimestamp, timestamp);
+  const tempHour = calculateHour(tempDay.currentDayTimestamp, timestamp);
+  const tempMinute = calculateMinute(tempHour.currentHourTimestamp, timestamp);
+
+  let finalYear = tempYear.year;
+  let finalMonth = tempMonth.month;
+  let finalDay = tempDay.day;
+  let finalHour = tempHour.hour;
+  let finalMinute = tempMinute.minute;
+  let finalSecond = tempMinute.second;
+
+  if (finalSecond >= ALIEN_TIME.minute) {
+    finalSecond = 0;
+    finalMinute = finalMinute + 1;
+  }
+
+  if (finalMinute >= ALIEN_TIME.hour) {
+    finalMinute = 0;
+    finalHour = finalHour + 1;
+  }
+
+  if (finalHour >= ALIEN_TIME.day) {
+    finalHour = 0;
+    finalDay = finalDay + 1;
+  }
+
+  if (finalDay >= monthArray[finalMonth - 1]) {
+    finalDay = 0 + 1;
+    finalMonth = finalMonth + 1;
+  }
+
+  if (finalMonth > monthArray.length) {
+    finalMonth = 0 + 1;
+    finalYear = finalYear + 1;
+  }
 
   return {
-    year: year.year,
-    month: month.month,
-    day: day.day,
-    hour: hour.hour,
-    minute: minute.minute,
-    second: minute.second,
+    year: finalYear + DEFAULT_ALIEN_TIMESTAMP_TIME.year,
+    month: finalMonth,
+    day: finalDay,
+    hour: finalHour,
+    minute: finalMinute,
+    second: finalSecond,
   };
+};
+
+export const convertAlienTimeToTimestamp = (
+  time: {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+  },
+  totalDays: number,
+  monthArray: number[]
+) => {
+  const second = time.second;
+  const minute = time.minute * ALIEN_TIME_IN_TIMESTAMP.minute;
+  const hour = time.hour * ALIEN_TIME_IN_TIMESTAMP.hour;
+  const day = (time.day - 1) * ALIEN_TIME_IN_TIMESTAMP.day;
+
+  let tempMonthTotalDays = 0;
+  for (let i = 0; i < time.month - 1; i++) {
+    tempMonthTotalDays =
+      tempMonthTotalDays + monthArray[i] * ALIEN_TIME_IN_TIMESTAMP.day;
+  }
+
+  const year = calculateYear(
+    totalDays,
+    0,
+    time.year,
+    "year"
+  ).currentYearTimestamp;
+
+  const result = year + tempMonthTotalDays + day + hour + minute + second;
+
+  return result;
 };

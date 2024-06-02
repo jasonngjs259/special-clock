@@ -24,7 +24,7 @@
   flex-direction: column;
   width: 15%;
 
-  text {
+  .text {
     @include flexCenter;
     font-size: 150%;
     background-color: $white;

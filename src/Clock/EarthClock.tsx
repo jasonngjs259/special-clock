@@ -25,7 +25,9 @@ const EarthClock = (props: EarthClockProps) => {
   const monthArray = Object.values(EARTH_MONTH);
   const totalDays = totalEarthDaysPerYear(monthArray);
 
-  const [year, setYear] = useState(calculateYear(totalDays, earthTimestamp));
+  const [year, setYear] = useState(
+    calculateYear(totalDays, earthTimestamp, 0, "")
+  );
   const [month, setMonth] = useState(
     calculateMonth(
       year.year + DEFAULT_EARTH_TIMESTAP_TIME.year,
@@ -99,30 +101,32 @@ const EarthClock = (props: EarthClockProps) => {
       {/* <div>Timestamp {earthTimestamp}</div> */}
       <div className={styles.dateContainer}>
         <div className={styles.contentContainer}>
-          <text>{year.year + DEFAULT_EARTH_TIMESTAP_TIME.year}</text>
+          <div className={styles.text}>
+            {year.year + DEFAULT_EARTH_TIMESTAP_TIME.year}
+          </div>
           <span>Year</span>
         </div>
         <div className={styles.contentContainer}>
-          <text>{month.month}</text>
+          <div className={styles.text}>{month.month}</div>
           <span>Month</span>
         </div>
         <div className={styles.contentContainer}>
-          <text>{day.day}</text>
+          <div className={styles.text}>{day.day}</div>
           <span>Day</span>
         </div>
       </div>
 
       <div className={styles.timeContainer}>
         <div className={styles.contentContainer}>
-          <text>{hour.hour}</text>
+          <div className={styles.text}>{hour.hour}</div>
           <span>Hour</span>
         </div>
         <div className={styles.contentContainer}>
-          <text>{minute.minute}</text>
+          <div className={styles.text}>{minute.minute}</div>
           <span>Minute</span>
         </div>
         <div className={styles.contentContainer}>
-          <text>{second}</text>
+          <div className={styles.text}>{second}</div>
           <span>Second</span>
         </div>
       </div>
