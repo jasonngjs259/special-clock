@@ -1,0 +1,9 @@
+@import "./CSS/variables.scss";
+
+.backgroundContainer {
+  @include flexCenter;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-family: $font-family;
+}
