@@ -29,8 +29,8 @@ const DateTimeCalculator = ({
   const totalAlienDays = totalAlienDaysPerYear(alienMonthArray);
   const totalEarthDays = totalEarthDaysPerYear(earthMonthArray);
 
-  const [newEarthTimestamp, setNewEarthTimestamp] = useState(earthTimestamp);
-  const [newAlienTimestamp, setNewAlienTimestamp] = useState(alienTimestamp);
+  const [newEarthTimestamp, setNewEarthTimestamp] = useState(1);
+  const [newAlienTimestamp, setNewAlienTimestamp] = useState(2);
   const [alienTime, setAlienTime] = useState(
     calculateAlienTimeAll(totalAlienDays, alienMonthArray, newAlienTimestamp)
   );

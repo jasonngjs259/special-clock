@@ -49,9 +49,8 @@ export const calculateYear = (
     }
 
     return {
-      year: tempYear - 1,
-      currentYearTimestamp:
-        lastTimestampCounter - EARTH_TIME_IN_TIMESTAMP.hour * EARTH_TIME.utc,
+      year: tempYear,
+      currentYearTimestamp: lastTimestampCounter,
       leapYearCounter: leapYearCounter,
     };
   }
@@ -71,9 +70,8 @@ export const calculateYear = (
   }
 
   return {
-    year: tempYear - 1,
-    currentYearTimestamp:
-      lastTimestampCounter - EARTH_TIME_IN_TIMESTAMP.hour * EARTH_TIME.utc,
+    year: tempYear,
+    currentYearTimestamp: lastTimestampCounter,
     leapYearCounter: leapYearCounter,
   };
 };

@@ -32,7 +32,7 @@ export const addRemainingDays = () => {
 };
 
 export const alignTimestamp = (timestamp: number) => {
-  return timestamp - addRemainingDays();
+  return timestamp + addRemainingDays();
 };
 
 export const calculateYear = (
@@ -154,36 +154,54 @@ export const calculateAlienTimeAll = (
   const tempMinute = calculateMinute(tempHour.currentHourTimestamp, timestamp);
 
   let finalYear = tempYear.year;
-  let finalMonth = tempMonth.month;
-  let finalDay = tempDay.day;
-  let finalHour = tempHour.hour;
-  let finalMinute = tempMinute.minute;
-  let finalSecond = tempMinute.second;
+  let finalMonth = tempMonth.month + DEFAULT_ALIEN_TIMESTAMP_TIME.month;
+  let finalDay = tempDay.day + DEFAULT_ALIEN_TIMESTAMP_TIME.day;
+  let finalHour = tempHour.hour + DEFAULT_ALIEN_TIMESTAMP_TIME.hour;
+  let finalMinute = tempMinute.minute + DEFAULT_ALIEN_TIMESTAMP_TIME.minute;
+  let finalSecond = tempMinute.second + DEFAULT_ALIEN_TIMESTAMP_TIME.second;
+
+  console.log(finalYear);
+  console.log(finalSecond);
 
   if (finalSecond >= ALIEN_TIME.minute) {
-    finalSecond = 0;
+    finalSecond = finalSecond - ALIEN_TIME_IN_TIMESTAMP.minute;
     finalMinute = finalMinute + 1;
+  } else if (finalSecond < 0) {
+    finalSecond = Math.abs(finalSecond);
   }
 
   if (finalMinute >= ALIEN_TIME.hour) {
-    finalMinute = 0;
+    finalMinute = finalMinute - ALIEN_TIME_IN_TIMESTAMP.hour;
     finalHour = finalHour + 1;
+  } else if (finalMinute < 0) {
+    finalMinute = Math.abs(finalMinute);
   }
 
   if (finalHour >= ALIEN_TIME.day) {
-    finalHour = 0;
+    finalHour = finalHour - ALIEN_TIME_IN_TIMESTAMP.day;
     finalDay = finalDay + 1;
+  } else if (finalHour < 0) {
+    finalHour = Math.abs(finalHour);
+    finalDay = finalDay - 1;
   }
 
   if (finalDay >= monthArray[finalMonth - 1]) {
-    finalDay = 0 + 1;
+    finalDay = finalDay - monthArray[finalMonth - 1];
     finalMonth = finalMonth + 1;
+  } else if (finalDay < 1) {
+    finalDay = Math.abs(finalDay);
+    finalMonth = finalMonth - 1;
   }
 
   if (finalMonth > monthArray.length) {
-    finalMonth = 0 + 1;
+    finalMonth = finalMonth - monthArray.length;
     finalYear = finalYear + 1;
+  } else if (finalMonth < 1) {
+    finalMonth = Math.abs(finalMonth);
+    finalYear = finalYear - 1;
   }
+
+  console.log(finalMonth);
 
   return {
     year: finalYear + DEFAULT_ALIEN_TIMESTAMP_TIME.year,
