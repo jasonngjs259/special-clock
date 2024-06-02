@@ -34,7 +34,7 @@ export const calculateYear = (
   let leapYearCounter = 0;
 
   if (type === "year") {
-    while (tempYear < year - DEFAULT_EARTH_TIMESTAP_TIME.year + 1) {
+    while (tempYear < year - DEFAULT_EARTH_TIMESTAP_TIME.year) {
       if (checkLeapYear(DEFAULT_EARTH_TIMESTAP_TIME.year + tempYear)) {
         tempTotalDays = totalDays + 1;
         leapYearCounter += 1;
@@ -48,10 +48,11 @@ export const calculateYear = (
       tempYear = tempYear + 1;
     }
 
+    console.log(tempYear);
+
     return {
-      year: tempYear - 1,
-      currentYearTimestamp:
-        lastTimestampCounter - EARTH_TIME_IN_TIMESTAMP.hour * EARTH_TIME.utc,
+      year: tempYear,
+      currentYearTimestamp: lastTimestampCounter,
       leapYearCounter: leapYearCounter,
     };
   }
@@ -71,9 +72,8 @@ export const calculateYear = (
   }
 
   return {
-    year: tempYear - 1,
-    currentYearTimestamp:
-      lastTimestampCounter - EARTH_TIME_IN_TIMESTAMP.hour * EARTH_TIME.utc,
+    year: tempYear,
+    currentYearTimestamp: lastTimestampCounter,
     leapYearCounter: leapYearCounter,
   };
 };
@@ -93,7 +93,7 @@ export const calculateMonth = (
 
   if (checkLeapYear(year)) tempMonthArray.splice(1, 1, 29);
 
-  while (differenceTimestamp >= tempTotalDays) {
+  while (differenceTimestamp > tempTotalDays) {
     lastMonthTimestampCounter = tempTotalDays;
     tempTotalDays =
       tempTotalDays + tempMonthArray[tempMonth] * EARTH_TIME_IN_TIMESTAMP.day;
@@ -177,39 +177,39 @@ export const calculateEarthTimeAll = (
   const tempMinute = calculateMinute(tempHour.currentHourTimestamp, timestamp);
 
   let finalYear = tempYear.year;
-  let finalMonth = tempMonth.month;
-  let finalDay = tempDay.day;
-  let finalHour = tempHour.hour;
-  let finalMinute = tempMinute.minute;
-  let finalSecond = tempMinute.second;
+  let finalMonth = tempMonth.month + DEFAULT_EARTH_TIMESTAP_TIME.month;
+  let finalDay = tempDay.day + DEFAULT_EARTH_TIMESTAP_TIME.day;
+  let finalHour = tempHour.hour + DEFAULT_EARTH_TIMESTAP_TIME.hour;
+  let finalMinute = tempMinute.minute + DEFAULT_EARTH_TIMESTAP_TIME.minute;
+  let finalSecond = tempMinute.second + DEFAULT_EARTH_TIMESTAP_TIME.second;
 
   if (finalSecond >= EARTH_TIME.minute) {
-    finalSecond = 0;
+    finalSecond = finalSecond - EARTH_TIME.minute;
     finalMinute = finalMinute + 1;
   }
 
   if (finalMinute >= EARTH_TIME.hour) {
-    finalMinute = 0;
+    finalMinute = finalMinute - EARTH_TIME.hour;
     finalHour = finalHour + 1;
   }
 
   if (finalHour >= EARTH_TIME.day) {
-    finalHour = 0;
+    finalHour = finalHour - EARTH_TIME.day;
     finalDay = finalDay + 1;
   }
 
   if (finalDay >= monthArray[finalMonth - 1]) {
-    finalDay = 0 + 1;
+    finalDay = finalDay - monthArray[finalMonth - 1];
     finalMonth = finalMonth + 1;
   }
 
   if (finalMonth > monthArray.length) {
-    finalMonth = 0 + 1;
+    finalMonth = finalMonth - monthArray.length;
     finalYear = finalYear + 1;
   }
 
   return {
-    year: finalYear + DEFAULT_EARTH_TIMESTAP_TIME.year,
+    year: finalYear,
     month: finalMonth,
     day: finalDay,
     hour: finalHour,

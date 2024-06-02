@@ -5,12 +5,8 @@ import {
   DEFAULT_ALIEN_TIMESTAMP_TIME,
 } from "../Constants/Alien";
 import {
-  calculateMonth,
-  calculateYear,
+  calculateAlienTimeAll,
   totalAlienDaysPerYear,
-  calculateDay,
-  calculateHour,
-  calculateMinute,
 } from "../utils/alienTime";
 import styles from "./Clock.module.scss";
 
@@ -22,26 +18,18 @@ const AlienClock = ({ alienTimestamp }: AlienClockProps) => {
   const totalDays = totalAlienDaysPerYear(Object.values(ALIEN_MONTH));
   const monthArray = ALIEN_TIME.month;
 
-  const [year, setYear] = useState(
-    calculateYear(totalDays, alienTimestamp, 0, "")
+  const alienTime = calculateAlienTimeAll(
+    totalDays,
+    monthArray,
+    alienTimestamp
   );
-  const [month, setMonth] = useState(
-    calculateMonth(
-      year.currentYearTimestamp,
-      Object.values(ALIEN_MONTH),
-      alienTimestamp
-    )
-  );
-  const [day, setDay] = useState(
-    calculateDay(month.currentMonthTimestamp, alienTimestamp)
-  );
-  const [hour, setHour] = useState(
-    calculateHour(day.currentDayTimestamp, alienTimestamp)
-  );
-  const [minute, setMinute] = useState(
-    calculateMinute(hour.currentHourTimestamp, alienTimestamp)
-  );
-  const [second, setSecond] = useState(minute.second);
+  const [year, setYear] = useState(alienTime.year);
+  const [month, setMonth] = useState(alienTime.month);
+  const [day, setDay] = useState(alienTime.day);
+  const [hour, setHour] = useState(alienTime.hour);
+  const [minute, setMinute] = useState(alienTime.minute);
+
+  const [second, setSecond] = useState(alienTime.second);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -50,41 +38,41 @@ const AlienClock = ({ alienTimestamp }: AlienClockProps) => {
 
     if (second >= ALIEN_TIME.minute) {
       setSecond(0);
-      setMinute((prev) => ({ ...prev, minute: prev.minute + 1 }));
+      setMinute((prev) => prev + 1);
     }
 
     return () => clearTimeout(timeout);
   }, [second]);
 
   useEffect(() => {
-    if (minute.minute >= ALIEN_TIME.hour) {
-      setMinute((prev) => ({ ...prev, minute: 0 }));
-      setHour((prev) => ({ ...prev, hour: prev.hour + 1 }));
+    if (minute >= ALIEN_TIME.hour) {
+      setMinute(0);
+      setHour((prev) => prev + 1);
     }
-  }, [minute.minute]);
+  }, [minute]);
 
   useEffect(() => {
-    if (hour.hour >= ALIEN_TIME.day) {
-      setHour((prev) => ({ ...prev, hour: 0 }));
-      setDay((prev) => ({ ...prev, day: prev.day + 1 }));
+    if (hour >= ALIEN_TIME.day) {
+      setHour(0);
+      setDay((prev) => prev + 1);
     }
-  }, [hour.hour]);
+  }, [hour]);
 
   useEffect(() => {
     const tempMonthArray = [...monthArray];
 
-    if (day.day > tempMonthArray[month.month - 1]) {
-      setDay((prev) => ({ ...prev, day: 1 }));
-      setMonth((prev) => ({ ...prev, month: prev.month + 1 }));
+    if (day > tempMonthArray[month - 1]) {
+      setDay(1);
+      setMonth((prev) => prev + 1);
     }
-  }, [day.day, year.year, month.month, monthArray]);
+  }, [day, year, month, monthArray]);
 
   useEffect(() => {
-    if (month.month > monthArray.length) {
-      setMonth((prev) => ({ ...prev, month: 1 }));
-      setYear((prev) => ({ ...prev, year: prev.year + 1 }));
+    if (month > monthArray.length) {
+      setMonth(1);
+      setYear((prev) => prev + 1);
     }
-  }, [month.month, monthArray]);
+  }, [month, monthArray]);
 
   return (
     <div className={styles.clockMainContainer}>
@@ -93,27 +81,27 @@ const AlienClock = ({ alienTimestamp }: AlienClockProps) => {
       <div className={styles.dateContainer}>
         <div className={styles.contentContainer}>
           <div className={styles.text}>
-            {year.year + DEFAULT_ALIEN_TIMESTAMP_TIME.year}
+            {year + DEFAULT_ALIEN_TIMESTAMP_TIME.year}
           </div>
           <span>Year</span>
         </div>
         <div className={styles.contentContainer}>
-          <div className={styles.text}>{month.month}</div>
+          <div className={styles.text}>{month}</div>
           <span>Month</span>
         </div>
         <div className={styles.contentContainer}>
-          <div className={styles.text}>{day.day}</div>
+          <div className={styles.text}>{day}</div>
           <span>Day</span>
         </div>
       </div>
 
       <div className={styles.timeContainer}>
         <div className={styles.contentContainer}>
-          <div className={styles.text}>{hour.hour}</div>
+          <div className={styles.text}>{hour}</div>
           <span>Hour</span>
         </div>
         <div className={styles.contentContainer}>
-          <div className={styles.text}>{minute.minute}</div>
+          <div className={styles.text}>{minute}</div>
           <span>Minute</span>
         </div>
         <div className={styles.contentContainer}>

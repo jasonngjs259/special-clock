@@ -29,8 +29,8 @@ const DateTimeCalculator = ({
   const totalAlienDays = totalAlienDaysPerYear(alienMonthArray);
   const totalEarthDays = totalEarthDaysPerYear(earthMonthArray);
 
-  const [newEarthTimestamp, setNewEarthTimestamp] = useState(earthTimestamp);
-  const [newAlienTimestamp, setNewAlienTimestamp] = useState(alienTimestamp);
+  const [newEarthTimestamp, setNewEarthTimestamp] = useState(0);
+  const [newAlienTimestamp, setNewAlienTimestamp] = useState(0);
   const [alienTime, setAlienTime] = useState(
     calculateAlienTimeAll(totalAlienDays, alienMonthArray, newAlienTimestamp)
   );
@@ -45,8 +45,6 @@ const DateTimeCalculator = ({
     minute: number;
     second: number;
   }>({ year: 0, month: 0, day: 0, hour: 0, minute: 0, second: 0 });
-
-  // const [formEarthTime, setFormEarthTime] = useState
 
   const handleChange = (event: any) => {
     const name = event.target.name;
@@ -116,6 +114,14 @@ const DateTimeCalculator = ({
   const handleAlienSubmit = (event: any) => {
     event.preventDefault();
 
+    setAlienTime({
+      year: inputs.year,
+      month: inputs.month,
+      day: inputs.day,
+      hour: inputs.hour,
+      minute: inputs.minute,
+      second: inputs.second,
+    });
     setNewAlienTimestamp(
       convertAlienTimeToTimestamp(
         {

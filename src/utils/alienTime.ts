@@ -49,14 +49,14 @@ export const calculateYear = (
     return {
       year: year,
       currentYearTimestamp:
-        (year - (DEFAULT_ALIEN_TIMESTAMP_TIME.year + 1)) *
+        (year - DEFAULT_ALIEN_TIMESTAMP_TIME.year) *
         totalDays *
         ALIEN_TIME_IN_TIMESTAMP.day,
     };
   }
 
   return {
-    year: finalYear + 1,
+    year: finalYear,
     currentYearTimestamp: finalYear * totalDays * ALIEN_TIME_IN_TIMESTAMP.day,
   };
 };
@@ -73,7 +73,7 @@ export const calculateMonth = (
   let lastMonthTimestampCounter = 0;
   let differenceTimestamp = tempCurrentTimestamp - currentYearTimestamp;
 
-  while (differenceTimestamp >= tempTotalDays) {
+  while (differenceTimestamp > tempTotalDays) {
     lastMonthTimestampCounter = tempTotalDays;
     tempTotalDays =
       tempTotalDays + tempMonthArray[tempMonth] * ALIEN_TIME_IN_TIMESTAMP.day;
@@ -97,7 +97,7 @@ export const calculateDay = (
   let dayTimestampCounter = 0;
   let lastDayTimestampCounter = 0;
 
-  while (dayTimestampCounter <= differenceTimestamp) {
+  while (dayTimestampCounter < differenceTimestamp) {
     lastDayTimestampCounter = dayTimestampCounter;
     dayTimestampCounter = dayTimestampCounter + ALIEN_TIME_IN_TIMESTAMP.day;
     tempDay = tempDay + 1;
@@ -154,39 +154,39 @@ export const calculateAlienTimeAll = (
   const tempMinute = calculateMinute(tempHour.currentHourTimestamp, timestamp);
 
   let finalYear = tempYear.year;
-  let finalMonth = tempMonth.month;
-  let finalDay = tempDay.day;
-  let finalHour = tempHour.hour;
-  let finalMinute = tempMinute.minute;
-  let finalSecond = tempMinute.second;
+  let finalMonth = tempMonth.month + DEFAULT_ALIEN_TIMESTAMP_TIME.month;
+  let finalDay = tempDay.day + DEFAULT_ALIEN_TIMESTAMP_TIME.day;
+  let finalHour = tempHour.hour + DEFAULT_ALIEN_TIMESTAMP_TIME.hour;
+  let finalMinute = tempMinute.minute + DEFAULT_ALIEN_TIMESTAMP_TIME.minute;
+  let finalSecond = tempMinute.second + DEFAULT_ALIEN_TIMESTAMP_TIME.second;
 
   if (finalSecond >= ALIEN_TIME.minute) {
-    finalSecond = 0;
+    finalSecond = finalSecond - ALIEN_TIME.minute;
     finalMinute = finalMinute + 1;
   }
 
   if (finalMinute >= ALIEN_TIME.hour) {
-    finalMinute = 0;
+    finalMinute = finalMinute - ALIEN_TIME.hour;
     finalHour = finalHour + 1;
   }
 
   if (finalHour >= ALIEN_TIME.day) {
-    finalHour = 0;
+    finalHour = finalHour - ALIEN_TIME.day;
     finalDay = finalDay + 1;
   }
 
   if (finalDay >= monthArray[finalMonth - 1]) {
-    finalDay = 0 + 1;
+    finalDay = finalDay - monthArray[finalMonth - 1];
     finalMonth = finalMonth + 1;
   }
 
   if (finalMonth > monthArray.length) {
-    finalMonth = 0 + 1;
+    finalMonth = finalMonth - monthArray.length;
     finalYear = finalYear + 1;
   }
 
   return {
-    year: finalYear + DEFAULT_ALIEN_TIMESTAMP_TIME.year,
+    year: finalYear,
     month: finalMonth,
     day: finalDay,
     hour: finalHour,
