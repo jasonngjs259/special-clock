@@ -31,25 +31,10 @@ export const addRemainingDays = () => {
   return result;
 };
 
-export const calculateYear = (
-  totalDays: number,
-  timestamp: number,
-  year: number,
-  type: string
-) => {
+export const calculateYear = (totalDays: number, timestamp: number) => {
   let finalYear = Math.floor(
     timestamp / totalDays / ALIEN_TIME_IN_TIMESTAMP.day
   );
-
-  if (type === "year") {
-    return {
-      year: year,
-      currentYearTimestamp:
-        (year - (DEFAULT_ALIEN_TIMESTAMP_TIME.year + 1)) *
-        totalDays *
-        ALIEN_TIME_IN_TIMESTAMP.day,
-    };
-  }
 
   return {
     year: finalYear,
@@ -125,7 +110,7 @@ export const convertAlienTimestampToTime = (
     newTimestamp = Math.abs(newTimestamp);
   }
 
-  const tempYear = calculateYear(totalDays, newTimestamp, 0, "");
+  const tempYear = calculateYear(totalDays, newTimestamp);
   const tempMonth = calculateMonth(monthArray, tempYear.currentYearTimestamp);
   const tempDay = calculateDay(tempMonth.currentMonthTimestamp);
   const tempHour = calculateHour(tempDay.currentDayTimestamp);
@@ -256,14 +241,21 @@ export const convertAlienTimeToTimestamp = (
       tempMonthTotalDays + monthArray[i] * ALIEN_TIME_IN_TIMESTAMP.day;
   }
 
-  const year = calculateYear(
-    totalDays,
-    0,
-    time.year,
-    "year"
-  ).currentYearTimestamp;
+  const year =
+    (time.year - DEFAULT_ALIEN_TIMESTAMP_TIME.year - 1) *
+    totalDays *
+    ALIEN_TIME_IN_TIMESTAMP.day;
 
-  const result = year + tempMonthTotalDays + day + hour + minute + second;
+  const result =
+    addRemainingDays() +
+    year +
+    tempMonthTotalDays +
+    day +
+    hour +
+    minute +
+    second;
+
+  console.log(result);
 
   return result;
 };

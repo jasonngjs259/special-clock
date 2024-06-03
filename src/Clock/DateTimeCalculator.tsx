@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ALIEN_TIME, DEFAULT_ALIEN_TIMESTAMP_TIME } from "../Constants/Alien";
+import { ALIEN_TIME } from "../Constants/Alien";
 import {
   DEFAULT_EARTH_TIMESTAP_TIME,
   EARTH_MONTH,
@@ -37,18 +37,34 @@ const DateTimeCalculator = ({
   const [alert, setAlert] = useState("");
   const [showEarthTime, setShowEarthTime] = useState(false);
   const [showAlienTime, setShowAlienTime] = useState(false);
-  const [alienTime, setAlienTime] = useState(
-    addAlienDefaultTime(
-      convertAlienTimestampToTime(
-        totalAlienDays,
-        alienMonthArray,
-        alienTimestamp
-      )
-    )
-  );
-  const [earthTime, setEarthTime] = useState(
-    calculateEarthTimeAll(totalEarthDays, earthMonthArray, newEarthTimestamp)
-  );
+  // const [alienTime, setAlienTime] = useState(
+  //   addAlienDefaultTime(
+  //     convertAlienTimestampToTime(
+  //       totalAlienDays,
+  //       alienMonthArray,
+  //       alienTimestamp
+  //     )
+  //   )
+  // );
+  // const [earthTime, setEarthTime] = useState(
+  //   calculateEarthTimeAll(totalEarthDays, earthMonthArray, newEarthTimestamp)
+  // );
+  const [alienTime, setAlienTime] = useState({
+    year: 2804,
+    month: 18,
+    day: 31,
+    hour: 2,
+    minute: 2,
+    second: 88,
+  });
+  const [earthTime, setEarthTime] = useState({
+    year: 1970,
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0,
+  });
   const [alienTimeInputs, setAlienTimeInputs] = useState<{
     year: number;
     month: number;
@@ -94,7 +110,7 @@ const DateTimeCalculator = ({
     if (
       name === "month" &&
       value.length <= 2 &&
-      value < earthMonthArray.length
+      value <= earthMonthArray.length
     ) {
       setEarthTimeInputs((values) => ({ ...values, [name]: value }));
     }
@@ -129,7 +145,7 @@ const DateTimeCalculator = ({
     if (
       name === "month" &&
       value.length <= 2 &&
-      value < alienMonthArray.length
+      value <= alienMonthArray.length
     ) {
       setAlienTimeInputs((values) => ({ ...values, [name]: value }));
     }
@@ -172,6 +188,7 @@ const DateTimeCalculator = ({
       totalEarthDays,
       earthMonthArray
     );
+    console.log(earthTimestamp);
 
     setEarthTime({
       year: earthTimeInputs.year,
@@ -228,7 +245,7 @@ const DateTimeCalculator = ({
             <input
               type="number"
               name="year"
-              min={1970}
+              min={1}
               value={earthTimeInputs.year}
               onChange={handleEarthTimeChange}
             />

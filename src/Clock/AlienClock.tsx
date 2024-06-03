@@ -1,16 +1,7 @@
 import { useState, useEffect } from "react";
+import { ALIEN_MONTH, ALIEN_TIME } from "../Constants/Alien";
 import {
-  ALIEN_MONTH,
-  ALIEN_TIME,
-  DEFAULT_ALIEN_TIMESTAMP_TIME,
-} from "../Constants/Alien";
-import {
-  calculateMonth,
-  calculateYear,
   totalAlienDaysPerYear,
-  calculateDay,
-  calculateHour,
-  calculateMinute,
   addAlienDefaultTime,
   convertAlienTimestampToTime,
 } from "../utils/alienTime";

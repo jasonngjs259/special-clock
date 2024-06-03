@@ -5,7 +5,7 @@ import DateTimeCalculator from "./DateTimeCalculator";
 
 const Clock = () => {
   const earthTimestamp = Math.floor(Date.now() / 1000);
-  const alienTimestamp = 1717424400 * 2;
+  const alienTimestamp = earthTimestamp * 2;
 
   return (
     <div className={styles.mainContainer}>
