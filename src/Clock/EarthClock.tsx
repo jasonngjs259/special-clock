@@ -33,18 +33,18 @@ const EarthClock = (props: EarthClockProps) => {
   const [minute, setMinute] = useState(earthTime.minute);
   const [second, setSecond] = useState(earthTime.second);
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     setSecond((prev) => prev + 1);
-  //   }, 1000);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSecond((prev) => prev + 1);
+    }, 1000);
 
-  //   if (second >= EARTH_TIME.minute) {
-  //     setSecond(0);
-  //     setMinute((prev) => prev + 1);
-  //   }
+    if (second >= EARTH_TIME.minute) {
+      setSecond(0);
+      setMinute((prev) => prev + 1);
+    }
 
-  //   return () => clearTimeout(timeout);
-  // }, [second]);
+    return () => clearTimeout(timeout);
+  }, [second]);
 
   useEffect(() => {
     if (minute >= EARTH_TIME.hour) {
