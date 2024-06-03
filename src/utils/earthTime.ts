@@ -35,7 +35,7 @@ export const calculateYear = (
 
   if (type === "year") {
     console.log(year);
-    while (tempYear < year - DEFAULT_EARTH_TIMESTAP_TIME.year) {
+    while (tempYear < year - DEFAULT_EARTH_TIMESTAP_TIME.year + 1) {
       if (checkLeapYear(DEFAULT_EARTH_TIMESTAP_TIME.year + tempYear)) {
         tempTotalDays = totalDays + 1;
         leapYearCounter += 1;
@@ -58,7 +58,7 @@ export const calculateYear = (
     };
   }
 
-  while (timestampCounter < tempTimestamp) {
+  while (timestampCounter <= tempTimestamp) {
     if (checkLeapYear(DEFAULT_EARTH_TIMESTAP_TIME.year + tempYear)) {
       tempTotalDays = totalDays + 1;
       leapYearCounter += 1;
@@ -102,7 +102,12 @@ export const calculateMonth = (
     tempMonth = tempMonth + 1;
   }
 
-  console.log(lastMonthTimestampCounter, tempMonth);
+  console.log(
+    differenceTimestamp,
+    tempTotalDays,
+    lastMonthTimestampCounter,
+    tempMonth
+  );
 
   return {
     month: tempMonth - 1,
@@ -114,6 +119,7 @@ export const calculateDay = (currentTimestamp: number) => {
   console.log(currentTimestamp);
   const day = Math.floor(currentTimestamp / EARTH_TIME_IN_TIMESTAMP.day);
 
+  console.log(currentTimestamp - day * EARTH_TIME_IN_TIMESTAMP.day);
   return {
     day: day,
     currentDayTimestamp: currentTimestamp - day * EARTH_TIME_IN_TIMESTAMP.day,
@@ -144,6 +150,7 @@ export const calculateEarthTimeAll = (
   monthArray: number[],
   timestamp: number
 ) => {
+  // let newTimestamp = timestamp + EARTH_TIME.utc * EARTH_TIME_IN_TIMESTAMP.hour;
   let newTimestamp = timestamp;
 
   if (timestamp < 0) {
@@ -161,9 +168,9 @@ export const calculateEarthTimeAll = (
   const tempMinute = calculateMinute(tempHour.currentHourTimestamp);
 
   let finalYear = tempYear.year;
-  let finalMonth = tempMonth.month + 1;
+  let finalMonth = tempMonth.month;
   let finalDay = tempDay.day;
-  let finalHour = tempHour.hour + 8;
+  let finalHour = tempHour.hour;
   let finalMinute = tempMinute.minute;
   let finalSecond = tempMinute.second;
 
@@ -175,6 +182,43 @@ export const calculateEarthTimeAll = (
     finalMinute = -Math.abs(tempMinute.minute);
     finalSecond = -Math.abs(tempMinute.second);
   }
+
+  console.log({
+    year: finalYear,
+    month: finalMonth,
+    day: finalDay,
+    hour: finalHour,
+    minute: finalMinute,
+    second: finalSecond,
+  });
+
+  return {
+    year: finalYear,
+    month: finalMonth,
+    day: finalDay,
+    hour: finalHour,
+    minute: finalMinute,
+    second: finalSecond,
+  };
+};
+
+export const addEarthDefaultTime = (
+  time: {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+  },
+  monthArray: number[]
+) => {
+  let finalYear = time.year;
+  let finalMonth = time.month + 1;
+  let finalDay = time.day + 1;
+  let finalHour = time.hour;
+  let finalMinute = time.minute;
+  let finalSecond = time.second;
 
   if (finalSecond >= EARTH_TIME.minute) {
     finalSecond = finalSecond - EARTH_TIME.minute;

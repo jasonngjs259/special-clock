@@ -5,6 +5,7 @@ import {
   EARTH_TIME,
 } from "../Constants/Earth";
 import {
+  addEarthDefaultTime,
   calculateEarthTimeAll,
   checkLeapYear,
   totalEarthDaysPerYear,
@@ -20,10 +21,9 @@ const EarthClock = (props: EarthClockProps) => {
 
   const monthArray = Object.values(EARTH_MONTH);
   const totalDays = totalEarthDaysPerYear(monthArray);
-  const earthTime = calculateEarthTimeAll(
-    totalDays,
-    monthArray,
-    earthTimestamp
+  const earthTime = addEarthDefaultTime(
+    calculateEarthTimeAll(totalDays, monthArray, earthTimestamp),
+    monthArray
   );
 
   const [year, setYear] = useState(earthTime.year);

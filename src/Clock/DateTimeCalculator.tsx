@@ -4,6 +4,7 @@ import {
   DEFAULT_EARTH_TIMESTAP_TIME,
   EARTH_MONTH,
   EARTH_TIME,
+  EARTH_TIME_IN_TIMESTAMP,
 } from "../Constants/Earth";
 import {
   addAlienDefaultTime,
@@ -12,6 +13,7 @@ import {
   totalAlienDaysPerYear,
 } from "../utils/alienTime";
 import {
+  addEarthDefaultTime,
   calculateEarthTimeAll,
   convertEarthTimeToTimestamp,
   totalEarthDaysPerYear,
@@ -229,9 +231,16 @@ const DateTimeCalculator = ({
     );
 
     setNewAlienTimestamp(alienTimestamp);
-    setNewEarthTimestamp(alienTimestamp / 2);
+    setNewEarthTimestamp(Math.floor(alienTimestamp / 2));
     setEarthTime(
-      calculateEarthTimeAll(totalEarthDays, earthMonthArray, alienTimestamp / 2)
+      addEarthDefaultTime(
+        calculateEarthTimeAll(
+          totalEarthDays,
+          earthMonthArray,
+          Math.floor(alienTimestamp / 2)
+        ),
+        earthMonthArray
+      )
     );
     setShowEarthTime(true);
   };

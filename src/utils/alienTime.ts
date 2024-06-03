@@ -123,6 +123,15 @@ export const convertAlienTimestampToTime = (
   let finalMinute = tempMinute.minute;
   let finalSecond = tempMinute.second;
 
+  console.log({
+    year: finalYear,
+    month: finalMonth,
+    day: finalDay,
+    hour: finalHour,
+    minute: finalMinute,
+    second: finalSecond,
+  });
+
   if (timestamp < 0) {
     finalYear = -Math.abs(tempYear.year);
     finalMonth = -Math.abs(tempMonth.month);
