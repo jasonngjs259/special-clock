@@ -34,7 +34,6 @@ export const calculateYear = (
   let leapYearCounter = 0;
 
   if (type === "year") {
-    console.log(year);
     while (tempYear < year - DEFAULT_EARTH_TIMESTAP_TIME.year + 1) {
       if (checkLeapYear(DEFAULT_EARTH_TIMESTAP_TIME.year + tempYear)) {
         tempTotalDays = totalDays + 1;
@@ -48,8 +47,6 @@ export const calculateYear = (
         timestampCounter + tempTotalDays * EARTH_TIME_IN_TIMESTAMP.day;
       tempYear = tempYear + 1;
     }
-
-    console.log(tempYear);
 
     return {
       year: tempYear,
@@ -92,7 +89,6 @@ export const calculateMonth = (
   let lastMonthTimestampCounter = 0;
   let differenceTimestamp = tempCurrentTimestamp - currentYearTimestamp;
 
-  console.log(currentYearTimestamp, differenceTimestamp);
   if (checkLeapYear(year)) tempMonthArray.splice(1, 1, 29);
 
   while (differenceTimestamp >= tempTotalDays) {
@@ -102,13 +98,6 @@ export const calculateMonth = (
     tempMonth = tempMonth + 1;
   }
 
-  console.log(
-    differenceTimestamp,
-    tempTotalDays,
-    lastMonthTimestampCounter,
-    tempMonth
-  );
-
   return {
     month: tempMonth - 1,
     currentMonthTimestamp: differenceTimestamp - lastMonthTimestampCounter,
@@ -116,10 +105,8 @@ export const calculateMonth = (
 };
 
 export const calculateDay = (currentTimestamp: number) => {
-  console.log(currentTimestamp);
   const day = Math.floor(currentTimestamp / EARTH_TIME_IN_TIMESTAMP.day);
 
-  console.log(currentTimestamp - day * EARTH_TIME_IN_TIMESTAMP.day);
   return {
     day: day,
     currentDayTimestamp: currentTimestamp - day * EARTH_TIME_IN_TIMESTAMP.day,
@@ -182,15 +169,6 @@ export const calculateEarthTimeAll = (
     finalMinute = -Math.abs(tempMinute.minute);
     finalSecond = -Math.abs(tempMinute.second);
   }
-
-  console.log({
-    year: finalYear,
-    month: finalMonth,
-    day: finalDay,
-    hour: finalHour,
-    minute: finalMinute,
-    second: finalSecond,
-  });
 
   return {
     year: finalYear,
@@ -299,8 +277,6 @@ export const convertEarthTimeToTimestamp = (
 
   const year = calculateYear(totalDays, 0, time.year, "year");
 
-  console.log(year.currentYearTimestamp, year.year, tempMonthTotalDays, day);
-
   const result =
     year.currentYearTimestamp +
     tempMonthTotalDays +
@@ -308,8 +284,6 @@ export const convertEarthTimeToTimestamp = (
     hour +
     minute +
     second;
-
-  console.log(result);
 
   return result;
 };

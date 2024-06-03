@@ -101,6 +101,7 @@ const DateTimeCalculator = ({
   const handleEarthTimeChange = (event: any) => {
     const name = event.target.name;
     const value = event.target.value;
+    const tempMonthArray = [...earthMonthArray];
     setAlert("");
     setShowAlienTime(false);
     setShowEarthTime(false);
@@ -112,12 +113,21 @@ const DateTimeCalculator = ({
     if (
       name === "month" &&
       value.length <= 2 &&
+      value > 0 &&
       value <= earthMonthArray.length
     ) {
       setEarthTimeInputs((values) => ({ ...values, [name]: value }));
     }
 
-    if (name === "day" && value.length <= 2 && value <= 31) {
+    if (earthTimeInputs.year % 4 === 0) tempMonthArray.splice(1, 1, 29);
+    else tempMonthArray.splice(1, 1, 28);
+
+    if (
+      name === "day" &&
+      value.length <= 2 &&
+      value > 0 &&
+      value <= tempMonthArray[earthTimeInputs.month - 1]
+    ) {
       setEarthTimeInputs((values) => ({ ...values, [name]: value }));
     }
 
@@ -147,12 +157,17 @@ const DateTimeCalculator = ({
     if (
       name === "month" &&
       value.length <= 2 &&
+      value > 0 &&
       value <= alienMonthArray.length
     ) {
       setAlienTimeInputs((values) => ({ ...values, [name]: value }));
     }
 
-    if (name === "day" && value.length <= 2 && value <= 48) {
+    if (
+      name === "day" &&
+      value.length <= 2 &&
+      value <= alienMonthArray[alienTimeInputs.month - 1]
+    ) {
       setAlienTimeInputs((values) => ({ ...values, [name]: value }));
     }
 
@@ -190,7 +205,6 @@ const DateTimeCalculator = ({
       totalEarthDays,
       earthMonthArray
     );
-    console.log(earthTimestamp);
 
     setEarthTime({
       year: earthTimeInputs.year,
