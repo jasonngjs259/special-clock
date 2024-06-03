@@ -36,7 +36,6 @@ const DateTimeCalculator = ({
 
   const [newEarthTimestamp, setNewEarthTimestamp] = useState(earthTimestamp);
   const [newAlienTimestamp, setNewAlienTimestamp] = useState(alienTimestamp);
-  const [alert, setAlert] = useState("");
   const [showEarthTime, setShowEarthTime] = useState(false);
   const [showAlienTime, setShowAlienTime] = useState(false);
   // const [alienTime, setAlienTime] = useState(
@@ -57,15 +56,15 @@ const DateTimeCalculator = ({
     day: 31,
     hour: 2,
     minute: 2,
-    second: 88,
+    second: 86,
   });
   const [earthTime, setEarthTime] = useState({
-    year: 1970,
-    month: 1,
-    day: 1,
-    hour: 0,
-    minute: 0,
-    second: 0,
+    year: 1969,
+    month: 12,
+    day: 31,
+    hour: 23,
+    minute: 59,
+    second: 59,
   });
   const [alienTimeInputs, setAlienTimeInputs] = useState<{
     year: number;
@@ -102,7 +101,7 @@ const DateTimeCalculator = ({
     const name = event.target.name;
     const value = event.target.value;
     const tempMonthArray = [...earthMonthArray];
-    setAlert("");
+
     setShowAlienTime(false);
     setShowEarthTime(false);
 
@@ -113,7 +112,7 @@ const DateTimeCalculator = ({
     if (
       name === "month" &&
       value.length <= 2 &&
-      value > 0 &&
+      value >= 0 &&
       value <= earthMonthArray.length
     ) {
       setEarthTimeInputs((values) => ({ ...values, [name]: value }));
@@ -125,7 +124,7 @@ const DateTimeCalculator = ({
     if (
       name === "day" &&
       value.length <= 2 &&
-      value > 0 &&
+      value >= 0 &&
       value <= tempMonthArray[earthTimeInputs.month - 1]
     ) {
       setEarthTimeInputs((values) => ({ ...values, [name]: value }));
@@ -147,6 +146,7 @@ const DateTimeCalculator = ({
   const handleAlienTimeChange = (event: any) => {
     const name = event.target.name;
     const value = event.target.value;
+
     setShowAlienTime(false);
     setShowEarthTime(false);
 
@@ -157,7 +157,7 @@ const DateTimeCalculator = ({
     if (
       name === "month" &&
       value.length <= 2 &&
-      value > 0 &&
+      value >= 0 &&
       value <= alienMonthArray.length
     ) {
       setAlienTimeInputs((values) => ({ ...values, [name]: value }));
@@ -166,6 +166,7 @@ const DateTimeCalculator = ({
     if (
       name === "day" &&
       value.length <= 2 &&
+      value >= 0 &&
       value <= alienMonthArray[alienTimeInputs.month - 1]
     ) {
       setAlienTimeInputs((values) => ({ ...values, [name]: value }));
@@ -186,12 +187,6 @@ const DateTimeCalculator = ({
 
   const handleEarthSubmit = (event: any) => {
     event.preventDefault();
-
-    if (earthTimeInputs.year % 4 === 0 && earthTimeInputs.day > 29) {
-      setAlert("Invalid day");
-    } else if (earthTimeInputs.year % 4 > 0 && earthTimeInputs.day > 28) {
-      setAlert("Invalid day");
-    }
 
     const earthTimestamp = convertEarthTimeToTimestamp(
       {
@@ -226,6 +221,7 @@ const DateTimeCalculator = ({
       )
     );
     setShowAlienTime(true);
+    setShowEarthTime(false);
   };
 
   const handleAlienSubmit = (event: any) => {
@@ -257,6 +253,7 @@ const DateTimeCalculator = ({
       )
     );
     setShowEarthTime(true);
+    setShowAlienTime(false);
   };
 
   return (
@@ -331,8 +328,7 @@ const DateTimeCalculator = ({
         <div className={styles.buttonContainer}>
           <button type="submit">Convert</button>
         </div>
-        <div className={alert && styles.redFont}>
-          {alert !== "" && alert}
+        <div>
           {showAlienTime &&
             `Alien Time: ${alienTime.year}-${alienTime.month}-${alienTime.day}
           ${alienTime.hour}:${alienTime.minute}:${alienTime.second}`}
@@ -349,6 +345,7 @@ const DateTimeCalculator = ({
             <input
               type="number"
               name="year"
+              min={1}
               value={alienTimeInputs.year}
               onChange={handleAlienTimeChange}
             />
@@ -358,6 +355,7 @@ const DateTimeCalculator = ({
             <input
               type="number"
               name="month"
+              min={1}
               value={alienTimeInputs.month}
               onChange={handleAlienTimeChange}
             />
@@ -367,6 +365,7 @@ const DateTimeCalculator = ({
             <input
               type="number"
               name="day"
+              min={1}
               value={alienTimeInputs.day}
               onChange={handleAlienTimeChange}
             />
