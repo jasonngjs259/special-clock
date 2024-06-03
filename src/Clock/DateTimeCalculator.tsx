@@ -6,10 +6,9 @@ import {
   EARTH_TIME,
 } from "../Constants/Earth";
 import {
-  addRemainingDays,
-  alignTimestamp,
-  calculateAlienTimeAll,
+  addAlienDefaultTime,
   convertAlienTimeToTimestamp,
+  convertAlienTimestampToTime,
   totalAlienDaysPerYear,
 } from "../utils/alienTime";
 import {
@@ -39,7 +38,13 @@ const DateTimeCalculator = ({
   const [showEarthTime, setShowEarthTime] = useState(false);
   const [showAlienTime, setShowAlienTime] = useState(false);
   const [alienTime, setAlienTime] = useState(
-    calculateAlienTimeAll(totalAlienDays, alienMonthArray, newAlienTimestamp)
+    addAlienDefaultTime(
+      convertAlienTimestampToTime(
+        totalAlienDays,
+        alienMonthArray,
+        alienTimestamp
+      )
+    )
   );
   const [earthTime, setEarthTime] = useState(
     calculateEarthTimeAll(totalEarthDays, earthMonthArray, newEarthTimestamp)
@@ -155,6 +160,19 @@ const DateTimeCalculator = ({
       setAlert("Invalid day");
     }
 
+    const earthTimestamp = convertEarthTimeToTimestamp(
+      {
+        year: earthTimeInputs.year,
+        month: earthTimeInputs.month,
+        day: earthTimeInputs.day,
+        hour: earthTimeInputs.hour,
+        minute: earthTimeInputs.minute,
+        second: earthTimeInputs.second,
+      },
+      totalEarthDays,
+      earthMonthArray
+    );
+
     setEarthTime({
       year: earthTimeInputs.year,
       month: earthTimeInputs.month,
@@ -163,50 +181,15 @@ const DateTimeCalculator = ({
       minute: earthTimeInputs.minute,
       second: earthTimeInputs.second,
     });
-    setNewEarthTimestamp(
-      convertEarthTimeToTimestamp(
-        {
-          year: earthTimeInputs.year,
-          month: earthTimeInputs.month,
-          day: earthTimeInputs.day,
-          hour: earthTimeInputs.hour,
-          minute: earthTimeInputs.minute,
-          second: earthTimeInputs.second,
-        },
-        totalEarthDays,
-        earthMonthArray
-      )
-    );
-    setNewAlienTimestamp(
-      convertEarthTimeToTimestamp(
-        {
-          year: earthTimeInputs.year,
-          month: earthTimeInputs.month,
-          day: earthTimeInputs.day,
-          hour: earthTimeInputs.hour,
-          minute: earthTimeInputs.minute,
-          second: earthTimeInputs.second,
-        },
-        totalEarthDays,
-        earthMonthArray
-      ) * 2
-    );
+    setNewEarthTimestamp(earthTimestamp);
+    setNewAlienTimestamp(earthTimestamp * 2);
     setAlienTime(
-      calculateAlienTimeAll(
-        totalAlienDays,
-        alienMonthArray,
-        convertEarthTimeToTimestamp(
-          {
-            year: earthTimeInputs.year,
-            month: earthTimeInputs.month,
-            day: earthTimeInputs.day,
-            hour: earthTimeInputs.hour,
-            minute: earthTimeInputs.minute,
-            second: earthTimeInputs.second,
-          },
-          totalEarthDays,
-          earthMonthArray
-        ) * 2
+      addAlienDefaultTime(
+        convertAlienTimestampToTime(
+          totalAlienDays,
+          alienMonthArray,
+          earthTimestamp * 2
+        )
       )
     );
     setShowAlienTime(true);
@@ -215,51 +198,23 @@ const DateTimeCalculator = ({
   const handleAlienSubmit = (event: any) => {
     event.preventDefault();
 
-    setNewAlienTimestamp(
-      convertAlienTimeToTimestamp(
-        {
-          year: alienTimeInputs.year,
-          month: alienTimeInputs.month,
-          day: alienTimeInputs.day,
-          hour: alienTimeInputs.hour,
-          minute: alienTimeInputs.minute,
-          second: alienTimeInputs.second,
-        },
-        totalAlienDays,
-        alienMonthArray
-      )
+    const alienTimestamp = convertAlienTimeToTimestamp(
+      {
+        year: alienTimeInputs.year,
+        month: alienTimeInputs.month,
+        day: alienTimeInputs.day,
+        hour: alienTimeInputs.hour,
+        minute: alienTimeInputs.minute,
+        second: alienTimeInputs.second,
+      },
+      totalAlienDays,
+      alienMonthArray
     );
-    setNewEarthTimestamp(
-      convertAlienTimeToTimestamp(
-        {
-          year: alienTimeInputs.year,
-          month: alienTimeInputs.month,
-          day: alienTimeInputs.day,
-          hour: alienTimeInputs.hour,
-          minute: alienTimeInputs.minute,
-          second: alienTimeInputs.second,
-        },
-        totalAlienDays,
-        alienMonthArray
-      ) / 2
-    );
+
+    setNewAlienTimestamp(alienTimestamp);
+    setNewEarthTimestamp(alienTimestamp / 2);
     setEarthTime(
-      calculateEarthTimeAll(
-        totalEarthDays,
-        earthMonthArray,
-        convertAlienTimeToTimestamp(
-          {
-            year: alienTimeInputs.year,
-            month: alienTimeInputs.month,
-            day: alienTimeInputs.day,
-            hour: alienTimeInputs.hour,
-            minute: alienTimeInputs.minute,
-            second: alienTimeInputs.second,
-          },
-          totalAlienDays,
-          alienMonthArray
-        ) / 2
-      )
+      calculateEarthTimeAll(totalEarthDays, earthMonthArray, alienTimestamp / 2)
     );
     setShowEarthTime(true);
   };
@@ -344,8 +299,8 @@ const DateTimeCalculator = ({
         </div>
       </form>
 
-      {/* <div>{newEarthTimestamp}</div>
-      <div>{newAlienTimestamp}</div> */}
+      <div>{newEarthTimestamp}</div>
+      <div>{newAlienTimestamp}</div>
 
       <div className={styles.clockTitle}>Alien Time</div>
       <form onSubmit={handleAlienSubmit}>

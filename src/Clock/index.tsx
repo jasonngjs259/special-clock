@@ -2,11 +2,10 @@ import AlienClock from "./AlienClock";
 import EarthClock from "./EarthClock";
 import styles from "./index.module.scss";
 import DateTimeCalculator from "./DateTimeCalculator";
-import { alignTimestamp } from "../utils/alienTime";
 
 const Clock = () => {
   const earthTimestamp = Math.floor(Date.now() / 1000);
-  const alienTimestamp = earthTimestamp * 2;
+  const alienTimestamp = 1717424400 * 2;
 
   return (
     <div className={styles.mainContainer}>
