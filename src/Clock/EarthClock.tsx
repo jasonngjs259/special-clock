@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  DEFAULT_EARTH_TIMESTAP_TIME,
-  EARTH_MONTH,
-  EARTH_TIME,
-} from "../Constants/Earth";
-import {
-  addEarthDefaultTime,
-  calculateEarthTimeAll,
-  checkLeapYear,
-  totalEarthDaysPerYear,
-} from "../utils/earthTime";
+import { EARTH_MONTH, EARTH_TIME } from "../Constants/Earth";
+import { checkLeapYear, getDateObject } from "../utils/earthTime";
 import styles from "./Clock.module.scss";
 
 interface EarthClockProps {
@@ -20,11 +11,7 @@ const EarthClock = (props: EarthClockProps) => {
   const { earthTimestamp } = props;
 
   const monthArray = Object.values(EARTH_MONTH);
-  const totalDays = totalEarthDaysPerYear(monthArray);
-  const earthTime = addEarthDefaultTime(
-    calculateEarthTimeAll(totalDays, monthArray, earthTimestamp),
-    monthArray
-  );
+  const earthTime = getDateObject(earthTimestamp);
 
   const [year, setYear] = useState(earthTime.year);
   const [month, setMonth] = useState(earthTime.month);
@@ -85,7 +72,7 @@ const EarthClock = (props: EarthClockProps) => {
 
   return (
     <div className={styles.clockMainContainer}>
-      <div className={styles.clockTitle}>Earth Time</div>
+      <div className={styles.clockTitle}>Earth Time (GMT+08:00)</div>
       {/* <div>Timestamp {earthTimestamp}</div> */}
       <div className={styles.dateContainer}>
         <div className={styles.contentContainer}>

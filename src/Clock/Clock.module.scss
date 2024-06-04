@@ -73,3 +73,14 @@ form {
 .redFont {
   color: red;
 }
+
+.swapIcon {
+  background-image: url("../Assets/up-down.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 10%;
+  height: 2.5%;
+  // border: 1px solid black;
+  margin: 1% 0;
+}
