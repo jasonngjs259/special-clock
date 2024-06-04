@@ -280,11 +280,9 @@ const DateTimeCalculator = ({
         alienTimeInputs.day < DEFAULT_ALIEN_TIMESTAMP_TIME.day)
     ) {
       setAlienTimeShowAlert("Minimum Date is Year 2804 Month 18 Day 31");
-    } else {
-      setAlienTimeShowAlert("");
-    }
-
-    if (alienTimeInputs.day > alienMonthArray[alienTimeInputs.month - 1]) {
+    } else if (
+      alienTimeInputs.day > alienMonthArray[alienTimeInputs.month - 1]
+    ) {
       setAlienTimeShowAlert(
         "Invalid Day, the maximum day for this month is " +
           alienMonthArray[alienTimeInputs.month - 1]
