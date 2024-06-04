@@ -28,7 +28,7 @@ const EarthClock = (props: EarthClockProps) => {
 
   const [year, setYear] = useState(earthTime.year);
   const [month, setMonth] = useState(earthTime.month);
-  const [day, setDay] = useState(earthTime.day - 1);
+  const [day, setDay] = useState(earthTime.day);
   const [hour, setHour] = useState(earthTime.hour);
   const [minute, setMinute] = useState(earthTime.minute);
   const [second, setSecond] = useState(earthTime.second);
@@ -61,10 +61,14 @@ const EarthClock = (props: EarthClockProps) => {
   }, [hour]);
 
   useEffect(() => {
-    const isLeapYear = checkLeapYear(year + DEFAULT_EARTH_TIMESTAP_TIME.year);
+    const isLeapYear = checkLeapYear(year);
     const tempMonthArray = [...monthArray];
 
-    if (isLeapYear) tempMonthArray.splice(1, 1, 29);
+    if (isLeapYear) {
+      tempMonthArray.splice(1, 1, 29);
+    } else {
+      tempMonthArray.splice(1, 1, 28);
+    }
 
     if (day > tempMonthArray[month - 1]) {
       setDay(1);

@@ -76,7 +76,7 @@ const DateTimeCalculator = ({
   }>({
     year: earthTime.year,
     month: earthTime.month,
-    day: earthTime.day - 1,
+    day: earthTime.day,
     hour: earthTime.hour,
     minute: earthTime.minute,
     second: earthTime.second,
@@ -489,9 +489,7 @@ const DateTimeCalculator = ({
           {alienTimeShowAlert}
           {alienTimeShowAlert === "" &&
             showEarthTime &&
-            `Earth Time: ${earthTime.year}-${earthTime.month}-${
-              earthTime.day - 1
-            }
+            `Earth Time: ${earthTime.year}-${earthTime.month}-${earthTime.day}
           ${earthTime.hour}:${earthTime.minute}:${earthTime.second}`}
         </div>
       </form>

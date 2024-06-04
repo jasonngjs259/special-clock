@@ -89,7 +89,8 @@ export const calculateMonth = (
   let lastMonthTimestampCounter = 0;
   let differenceTimestamp = tempCurrentTimestamp - currentYearTimestamp;
 
-  if (checkLeapYear(year)) tempMonthArray.splice(1, 1, 29);
+  if (checkLeapYear(year + DEFAULT_EARTH_TIMESTAP_TIME.year))
+    tempMonthArray.splice(1, 1, 29);
 
   while (differenceTimestamp >= tempTotalDays) {
     lastMonthTimestampCounter = tempTotalDays;
