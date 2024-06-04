@@ -282,7 +282,5 @@ export const convertAlienTimeToTimestamp = (
     minute +
     second;
 
-  console.log(result);
-
   return result;
 };

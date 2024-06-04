@@ -296,15 +296,6 @@ export const convertEarthTimeToTimestamp = (
 
   const year = calculateYear(totalDays, 0, time.year, "year");
 
-  console.log({
-    year: year,
-    month: tempMonthTotalDays,
-    day: day,
-    hour: hour,
-    minute: minute,
-    second: second,
-  });
-
   const result =
     year.currentYearTimestamp +
     tempMonthTotalDays +
