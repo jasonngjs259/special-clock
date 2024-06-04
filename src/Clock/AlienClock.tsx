@@ -25,18 +25,18 @@ const AlienClock = ({ alienTimestamp }: AlienClockProps) => {
   const [minute, setMinute] = useState(alienTime.minute);
   const [second, setSecond] = useState(alienTime.second);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSecond((prev) => prev + 1);
-    }, 500);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     setSecond((prev) => prev + 1);
+  //   }, 500);
 
-    if (second >= ALIEN_TIME.minute) {
-      setSecond(0);
-      setMinute((prev) => prev + 1);
-    }
+  //   if (second >= ALIEN_TIME.minute) {
+  //     setSecond(0);
+  //     setMinute((prev) => prev + 1);
+  //   }
 
-    return () => clearTimeout(timeout);
-  }, [second]);
+  //   return () => clearTimeout(timeout);
+  // }, [second]);
 
   useEffect(() => {
     if (minute >= ALIEN_TIME.hour) {

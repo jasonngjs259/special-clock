@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { ALIEN_TIME } from "../Constants/Alien";
-import {
-  DEFAULT_EARTH_TIMESTAP_TIME,
-  EARTH_MONTH,
-  EARTH_TIME,
-  EARTH_TIME_IN_TIMESTAMP,
-} from "../Constants/Earth";
+import { EARTH_MONTH, EARTH_TIME } from "../Constants/Earth";
 import {
   addAlienDefaultTime,
   convertAlienTimeToTimestamp,
@@ -50,21 +45,34 @@ const DateTimeCalculator = ({
   // const [earthTime, setEarthTime] = useState(
   //   calculateEarthTimeAll(totalEarthDays, earthMonthArray, newEarthTimestamp)
   // );
+
+  // console.log(
+  //   addAlienDefaultTime(
+  //     convertAlienTimestampToTime(totalAlienDays, alienMonthArray, -224539468)
+  //   )
+  // );
+
+  // console.log(
+  //   addEarthDefaultTime(
+  //     calculateEarthTimeAll(totalEarthDays, earthMonthArray, 1717424400),
+  //     earthMonthArray
+  //   )
+  // );
   const [alienTime, setAlienTime] = useState({
-    year: 2804,
-    month: 18,
-    day: 31,
-    hour: 2,
-    minute: 2,
-    second: 86,
+    year: 2820,
+    month: 3,
+    day: 44,
+    hour: 27,
+    minute: 32,
+    second: 88,
   });
   const [earthTime, setEarthTime] = useState({
-    year: 1969,
-    month: 12,
-    day: 31,
-    hour: 23,
-    minute: 59,
-    second: 59,
+    year: 2024,
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0,
   });
   const [alienTimeInputs, setAlienTimeInputs] = useState<{
     year: number;
@@ -106,7 +114,7 @@ const DateTimeCalculator = ({
     setShowEarthTime(false);
 
     if (name === "year" && value.length <= 4) {
-      setEarthTimeInputs((values) => ({ ...values, [name]: value }));
+      setEarthTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
 
     if (
@@ -115,7 +123,7 @@ const DateTimeCalculator = ({
       value >= 0 &&
       value <= earthMonthArray.length
     ) {
-      setEarthTimeInputs((values) => ({ ...values, [name]: value }));
+      setEarthTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
 
     if (earthTimeInputs.year % 4 === 0) tempMonthArray.splice(1, 1, 29);
@@ -127,19 +135,19 @@ const DateTimeCalculator = ({
       value >= 0 &&
       value <= tempMonthArray[earthTimeInputs.month - 1]
     ) {
-      setEarthTimeInputs((values) => ({ ...values, [name]: value }));
+      setEarthTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
 
     if (name === "hour" && value.length <= 2 && value < EARTH_TIME.day) {
-      setEarthTimeInputs((values) => ({ ...values, [name]: value }));
+      setEarthTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
 
     if (name === "minute" && value.length <= 2 && value < EARTH_TIME.hour) {
-      setEarthTimeInputs((values) => ({ ...values, [name]: value }));
+      setEarthTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
 
     if (name === "second" && value.length <= 2 && value < EARTH_TIME.minute) {
-      setEarthTimeInputs((values) => ({ ...values, [name]: value }));
+      setEarthTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
   };
 
@@ -151,7 +159,7 @@ const DateTimeCalculator = ({
     setShowEarthTime(false);
 
     if (name === "year" && value.length <= 4) {
-      setAlienTimeInputs((values) => ({ ...values, [name]: value }));
+      setAlienTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
 
     if (
@@ -160,7 +168,7 @@ const DateTimeCalculator = ({
       value >= 0 &&
       value <= alienMonthArray.length
     ) {
-      setAlienTimeInputs((values) => ({ ...values, [name]: value }));
+      setAlienTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
 
     if (
@@ -169,19 +177,19 @@ const DateTimeCalculator = ({
       value >= 0 &&
       value <= alienMonthArray[alienTimeInputs.month - 1]
     ) {
-      setAlienTimeInputs((values) => ({ ...values, [name]: value }));
+      setAlienTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
 
     if (name === "hour" && value.length <= 2 && value < ALIEN_TIME.day) {
-      setAlienTimeInputs((values) => ({ ...values, [name]: value }));
+      setAlienTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
 
     if (name === "minute" && value.length <= 2 && value < ALIEN_TIME.hour) {
-      setAlienTimeInputs((values) => ({ ...values, [name]: value }));
+      setAlienTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
 
     if (name === "second" && value.length <= 2 && value < ALIEN_TIME.minute) {
-      setAlienTimeInputs((values) => ({ ...values, [name]: value }));
+      setAlienTimeInputs((values) => ({ ...values, [name]: parseInt(value) }));
     }
   };
 
@@ -200,7 +208,7 @@ const DateTimeCalculator = ({
       totalEarthDays,
       earthMonthArray
     );
-
+    console.log(earthTimestamp);
     setEarthTime({
       year: earthTimeInputs.year,
       month: earthTimeInputs.month,
@@ -239,7 +247,8 @@ const DateTimeCalculator = ({
       totalAlienDays,
       alienMonthArray
     );
-
+    console.log(alienTimeInputs);
+    console.log(alienTimestamp);
     setNewAlienTimestamp(alienTimestamp);
     setNewEarthTimestamp(Math.floor(alienTimestamp / 2));
     setEarthTime(
@@ -265,7 +274,7 @@ const DateTimeCalculator = ({
             <input
               type="number"
               name="year"
-              min={1}
+              min={1970}
               value={earthTimeInputs.year}
               onChange={handleEarthTimeChange}
             />
@@ -335,8 +344,8 @@ const DateTimeCalculator = ({
         </div>
       </form>
 
-      <div>{newEarthTimestamp}</div>
-      <div>{newAlienTimestamp}</div>
+      {/* <div>{newEarthTimestamp}</div>
+      <div>{newAlienTimestamp}</div> */}
 
       <div className={styles.clockTitle}>Alien Time</div>
       <form onSubmit={handleAlienSubmit}>
@@ -378,6 +387,7 @@ const DateTimeCalculator = ({
             <input
               type="number"
               name="hour"
+              min={0}
               value={alienTimeInputs.hour}
               onChange={handleAlienTimeChange}
             />
@@ -387,6 +397,7 @@ const DateTimeCalculator = ({
             <input
               type="number"
               name="minute"
+              min={0}
               value={alienTimeInputs.minute}
               onChange={handleAlienTimeChange}
             />
@@ -396,6 +407,7 @@ const DateTimeCalculator = ({
             <input
               type="number"
               name="second"
+              min={0}
               value={alienTimeInputs.second}
               onChange={handleAlienTimeChange}
             />

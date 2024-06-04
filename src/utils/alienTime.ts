@@ -230,32 +230,59 @@ export const convertAlienTimeToTimestamp = (
   totalDays: number,
   monthArray: number[]
 ) => {
-  const second = time.second - DEFAULT_ALIEN_TIMESTAMP_TIME.second;
-  const minute =
-    (time.minute - DEFAULT_ALIEN_TIMESTAMP_TIME.minute) *
-    ALIEN_TIME_IN_TIMESTAMP.minute;
-  const hour =
-    (time.hour - DEFAULT_ALIEN_TIMESTAMP_TIME.hour) *
-    ALIEN_TIME_IN_TIMESTAMP.hour;
-  const day =
-    (time.day - DEFAULT_ALIEN_TIMESTAMP_TIME.day) * ALIEN_TIME_IN_TIMESTAMP.day;
+  const second = time.second;
+  const minute = time.minute * ALIEN_TIME_IN_TIMESTAMP.minute;
+  const hour = time.hour * ALIEN_TIME_IN_TIMESTAMP.hour;
+  const day = (time.day - 1) * ALIEN_TIME_IN_TIMESTAMP.day;
 
   let tempMonthTotalDays = 0;
-  for (
-    let i = 0;
-    i < time.month - DEFAULT_ALIEN_TIMESTAMP_TIME.month - 1;
-    i++
-  ) {
+  for (let i = 0; i < time.month - 1; i++) {
     tempMonthTotalDays =
       tempMonthTotalDays + monthArray[i] * ALIEN_TIME_IN_TIMESTAMP.day;
   }
 
   const year =
-    (time.year - DEFAULT_ALIEN_TIMESTAMP_TIME.year) *
+    (time.year - DEFAULT_ALIEN_TIMESTAMP_TIME.year - 1) *
     totalDays *
     ALIEN_TIME_IN_TIMESTAMP.day;
 
-  const result = year + tempMonthTotalDays + day + hour + minute + second;
+  // --------------------------------------------------------------
+
+  // const second = time.second - DEFAULT_ALIEN_TIMESTAMP_TIME.second;
+  // const minute =
+  //   (time.minute - DEFAULT_ALIEN_TIMESTAMP_TIME.minute) *
+  //   ALIEN_TIME_IN_TIMESTAMP.minute;
+  // const hour =
+  //   (time.hour - DEFAULT_ALIEN_TIMESTAMP_TIME.hour) *
+  //   ALIEN_TIME_IN_TIMESTAMP.hour;
+  // const day =
+  //   (time.day - DEFAULT_ALIEN_TIMESTAMP_TIME.day) * ALIEN_TIME_IN_TIMESTAMP.day;
+
+  // let tempMonthTotalDays = 0;
+  // for (
+  //   let i = 0;
+  //   i < time.month - DEFAULT_ALIEN_TIMESTAMP_TIME.month - 1;
+  //   i++
+  // ) {
+  //   tempMonthTotalDays =
+  //     tempMonthTotalDays + monthArray[i] * ALIEN_TIME_IN_TIMESTAMP.day;
+  // }
+
+  // const year =
+  //   (time.year - DEFAULT_ALIEN_TIMESTAMP_TIME.year) *
+  //   totalDays *
+  //   ALIEN_TIME_IN_TIMESTAMP.day;
+
+  const result =
+    addRemainingDays() +
+    year +
+    tempMonthTotalDays +
+    day +
+    hour +
+    minute +
+    second;
+
+  console.log(result);
 
   return result;
 };

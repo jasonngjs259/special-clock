@@ -260,7 +260,26 @@ export const convertEarthTimeToTimestamp = (
   totalDays: number,
   monthArray: number[]
 ) => {
-  const second = time.second;
+  // const second = time.second;
+  // const minute = time.minute * EARTH_TIME_IN_TIMESTAMP.minute;
+  // const hour = time.hour * EARTH_TIME_IN_TIMESTAMP.hour;
+  // const day = (time.day - 1) * EARTH_TIME_IN_TIMESTAMP.day;
+
+  // const tempMonthArray = [...monthArray];
+
+  // if (checkLeapYear(time.year)) tempMonthArray.splice(1, 1, 29);
+
+  // let tempMonthTotalDays = 0;
+  // for (let i = 0; i < time.month - 1; i++) {
+  //   tempMonthTotalDays =
+  //     tempMonthTotalDays + tempMonthArray[i] * EARTH_TIME_IN_TIMESTAMP.day;
+  // }
+
+  // const year = calculateYear(totalDays, 0, time.year, "year");
+
+  // ---------------------------------------------------------------------
+
+  const second = time.second - DEFAULT_EARTH_TIMESTAP_TIME.second;
   const minute = time.minute * EARTH_TIME_IN_TIMESTAMP.minute;
   const hour = time.hour * EARTH_TIME_IN_TIMESTAMP.hour;
   const day = (time.day - 1) * EARTH_TIME_IN_TIMESTAMP.day;
@@ -276,6 +295,15 @@ export const convertEarthTimeToTimestamp = (
   }
 
   const year = calculateYear(totalDays, 0, time.year, "year");
+
+  console.log({
+    year: year,
+    month: tempMonthTotalDays,
+    day: day,
+    hour: hour,
+    minute: minute,
+    second: second,
+  });
 
   const result =
     year.currentYearTimestamp +
