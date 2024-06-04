@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ALIEN_TIME, DEFAULT_ALIEN_TIMESTAMP_TIME } from "../Constants/Alien";
+import { ALIEN_TIME } from "../Constants/Alien";
 import { EARTH_MONTH, EARTH_TIME } from "../Constants/Earth";
 import {
   addAlienDefaultTime,
@@ -8,10 +8,9 @@ import {
   totalAlienDaysPerYear,
 } from "../utils/alienTime";
 import {
-  addEarthDefaultTime,
-  calculateEarthTimeAll,
-  convertEarthTimeToTimestamp,
-  totalEarthDaysPerYear,
+  getDateObject,
+  getUTCDateObject,
+  getUTCTimestamp,
 } from "../utils/earthTime";
 import styles from "./Clock.module.scss";
 
@@ -27,7 +26,6 @@ const DateTimeCalculator = ({
   const earthMonthArray = Object.values(EARTH_MONTH);
   const alienMonthArray = ALIEN_TIME.month;
   const totalAlienDays = totalAlienDaysPerYear(alienMonthArray);
-  const totalEarthDays = totalEarthDaysPerYear(earthMonthArray);
 
   const [newEarthTimestamp, setNewEarthTimestamp] = useState(earthTimestamp);
   const [newAlienTimestamp, setNewAlienTimestamp] = useState(alienTimestamp);
@@ -44,12 +42,7 @@ const DateTimeCalculator = ({
       )
     )
   );
-  const [earthTime, setEarthTime] = useState(
-    addEarthDefaultTime(
-      calculateEarthTimeAll(totalEarthDays, earthMonthArray, newEarthTimestamp),
-      earthMonthArray
-    )
-  );
+  const [earthTime, setEarthTime] = useState(getDateObject(earthTimestamp));
 
   const [alienTimeInputs, setAlienTimeInputs] = useState<{
     year: number;
@@ -233,18 +226,14 @@ const DateTimeCalculator = ({
       setEarthTimeShowAlert("");
     }
 
-    const earthTimestamp = convertEarthTimeToTimestamp(
-      {
-        year: earthTimeInputs.year,
-        month: earthTimeInputs.month,
-        day: earthTimeInputs.day,
-        hour: earthTimeInputs.hour,
-        minute: earthTimeInputs.minute,
-        second: earthTimeInputs.second,
-      },
-      totalEarthDays,
-      earthMonthArray
-    );
+    const convertEarthTime = getUTCTimestamp({
+      year: earthTimeInputs.year,
+      month: earthTimeInputs.month,
+      day: earthTimeInputs.day,
+      hour: earthTimeInputs.hour,
+      minute: earthTimeInputs.minute,
+      second: earthTimeInputs.second,
+    });
     setEarthTime({
       year: earthTimeInputs.year,
       month: earthTimeInputs.month,
@@ -253,14 +242,14 @@ const DateTimeCalculator = ({
       minute: earthTimeInputs.minute,
       second: earthTimeInputs.second,
     });
-    setNewEarthTimestamp(earthTimestamp);
-    setNewAlienTimestamp(earthTimestamp * 2);
+    setNewEarthTimestamp(convertEarthTime);
+    setNewAlienTimestamp(convertEarthTime * 2);
     setAlienTime(
       addAlienDefaultTime(
         convertAlienTimestampToTime(
           totalAlienDays,
           alienMonthArray,
-          earthTimestamp * 2
+          convertEarthTime * 2
         )
       )
     );
@@ -271,18 +260,7 @@ const DateTimeCalculator = ({
   const handleAlienSubmit = (event: any) => {
     event.preventDefault();
 
-    if (
-      alienTimeInputs.year < DEFAULT_ALIEN_TIMESTAMP_TIME.year ||
-      (alienTimeInputs.year === DEFAULT_ALIEN_TIMESTAMP_TIME.year &&
-        alienTimeInputs.month < DEFAULT_ALIEN_TIMESTAMP_TIME.month) ||
-      (alienTimeInputs.year === DEFAULT_ALIEN_TIMESTAMP_TIME.year &&
-        alienTimeInputs.month === DEFAULT_ALIEN_TIMESTAMP_TIME.month &&
-        alienTimeInputs.day < DEFAULT_ALIEN_TIMESTAMP_TIME.day)
-    ) {
-      setAlienTimeShowAlert("Minimum Date is Year 2804 Month 18 Day 31");
-    } else if (
-      alienTimeInputs.day > alienMonthArray[alienTimeInputs.month - 1]
-    ) {
+    if (alienTimeInputs.day > alienMonthArray[alienTimeInputs.month - 1]) {
       setAlienTimeShowAlert(
         "Invalid Day, the maximum day for this month is " +
           alienMonthArray[alienTimeInputs.month - 1]
@@ -305,30 +283,21 @@ const DateTimeCalculator = ({
     );
     setNewAlienTimestamp(alienTimestamp);
     setNewEarthTimestamp(Math.floor(alienTimestamp / 2));
-    setEarthTime(
-      addEarthDefaultTime(
-        calculateEarthTimeAll(
-          totalEarthDays,
-          earthMonthArray,
-          Math.floor(alienTimestamp / 2)
-        ),
-        earthMonthArray
-      )
-    );
+    setEarthTime(getUTCDateObject(alienTimestamp / 2));
     setShowEarthTime(true);
     setShowAlienTime(false);
   };
 
   return (
     <div className={styles.clockMainContainer}>
-      <div className={styles.clockTitle}>Earth Time</div>
+      <div className={styles.clockTitle}>Earth Time GMT</div>
       <form onSubmit={handleEarthSubmit}>
         <div className={styles.dateContainer}>
           <div className={styles.contentContainer}>
             <input
               type="number"
               name="year"
-              min={1970}
+              min={1}
               value={earthTimeInputs.year}
               onChange={handleEarthTimeChange}
               required
@@ -405,9 +374,11 @@ const DateTimeCalculator = ({
           ${alienTime.hour}:${alienTime.minute}:${alienTime.second}`}
         </div>
       </form>
-
-      {/* <div>{newEarthTimestamp}</div>
-      <div>{newAlienTimestamp}</div> */}
+      <div className={styles.swapIcon} />
+      <div>{newEarthTimestamp} (Earth Timestamp)</div>
+      <div className={styles.swapIcon} />
+      <div>{newAlienTimestamp} (Alien Timestamp)</div>
+      <div className={styles.swapIcon} />
 
       <div className={styles.clockTitle}>Alien Time</div>
       <form onSubmit={handleAlienSubmit}>
@@ -490,7 +461,7 @@ const DateTimeCalculator = ({
           {alienTimeShowAlert === "" &&
             showEarthTime &&
             `Earth Time: ${earthTime.year}-${earthTime.month}-${earthTime.day}
-          ${earthTime.hour}:${earthTime.minute}:${earthTime.second}`}
+          ${earthTime.hour}:${earthTime.minute}:${earthTime.second} GMT`}
         </div>
       </form>
     </div>
