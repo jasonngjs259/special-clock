@@ -273,10 +273,10 @@ const DateTimeCalculator = ({
 
     if (
       alienTimeInputs.year < DEFAULT_ALIEN_TIMESTAMP_TIME.year ||
-      (alienTimeInputs.year >= DEFAULT_ALIEN_TIMESTAMP_TIME.year &&
+      (alienTimeInputs.year === DEFAULT_ALIEN_TIMESTAMP_TIME.year &&
         alienTimeInputs.month < DEFAULT_ALIEN_TIMESTAMP_TIME.month) ||
-      (alienTimeInputs.year >= DEFAULT_ALIEN_TIMESTAMP_TIME.year &&
-        alienTimeInputs.month >= DEFAULT_ALIEN_TIMESTAMP_TIME.month &&
+      (alienTimeInputs.year === DEFAULT_ALIEN_TIMESTAMP_TIME.year &&
+        alienTimeInputs.month === DEFAULT_ALIEN_TIMESTAMP_TIME.month &&
         alienTimeInputs.day < DEFAULT_ALIEN_TIMESTAMP_TIME.day)
     ) {
       setAlienTimeShowAlert("Minimum Date is Year 2804 Month 18 Day 31");
